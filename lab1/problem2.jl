@@ -1,4 +1,4 @@
-# CSE 5441 Numerical Methods Spring 2023
+# Numerical Methods Spring 2023
 # Professor Nick Painter
 #
 # Author: Drew Ripberger
