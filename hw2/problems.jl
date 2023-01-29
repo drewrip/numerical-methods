@@ -5,6 +5,7 @@
 
 using Printf
 using PrettyTables
+using Polynomials
 
 # Computer Problem 3.1.1
 
@@ -36,3 +37,14 @@ x = -1
 y = 1
 
 println("root of g(x) at x=", bisection(g, x, y, 100, .01))
+
+# Computer Problem 3.1.10
+
+h = Polynomial([40320, -109584, 118124, -67284, 22449, -4536, 546, -36, 1])
+println(h)
+println("roots of the polynomial:")
+println(roots(h))
+h_prime = Polynomial([40320, -109584, 118124, -67284, 22449, -4536, 546, -37, 1])
+println(h_prime)
+println("roots of the new polynomial:")
+println(roots(h_prime))
