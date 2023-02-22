@@ -8,6 +8,9 @@ using PrettyTables
 using FFTW
 using Polynomials
 
+# Implementation of the Fast Fourier Transform and its inverse
+# Note: this implementation is not well optimized and is directly
+#       written from our in class derivation and psuedocode
 function fft(a)
     n = length(a)
     if n == 1
@@ -22,7 +25,6 @@ function fft(a)
         psi = exp((2 * pi * 1im)/n)
         y = complex(zeros(Float64, n))
         for k = 1:(floor(Int64, n/2))
-            println(k)
             y[k] = y_e[k] + w*y_o[k]
             y[k + floor(Int64, n/2)] = y_e[k] - w*y_o[k]
             w = w * psi
@@ -61,30 +63,41 @@ function ifft(a)
 end
 
 function fast_polynomial_multiplication(a, b)
-    # Pad the input polynomials if needed in future
-    n = length(a)
+    la = length(a)
+    lb = length(b)
+    n = max(la, lb)
+    if la < n 
+        a = hcat(a, zeros(n-la))
+    elseif length(b) < n
+        b = hcat(b, zeros(n-lb))
+    end
+    a = hcat(a, zeros(n))
+    b = hcat(b, zeros(n))
+    N = 2*n
     A = fft(a)
     B = fft(b)
-    C = complex(zeros(Float64, n))
-    for k = 1:n
+    C = complex(zeros(Float64, N))
+    for k = 1:N
         C[k] = A[k] * B[k]
     end
     ifft(C)
 end
 
+# Horner's method
 function poly_eval(a, x)
-    res = 0+0im
     n = length(a)
-    xp = 1
-    for k = 1:n
-        res += xp*a[k]
-        xp *= x
+    res = a[n]
+    for k = n-1:-1:1
+        res *= x
+        res += a[k]
     end
     res
 end
 
 p = [10, 4, 9, 5]
 q = [9, 9, 2, 5]
+
+println(fft(p))
 
 println(fast_polynomial_multiplication(p, q))
 
