@@ -97,8 +97,9 @@ end
 p = [10, 4, 9, 5]
 q = [9, 9, 2, 5]
 
-println(fft(p))
+println("fft(p) = ", fft(p))
 
-println(fast_polynomial_multiplication(p, q))
+println("p*q with fast polynomial mult = ", fast_polynomial_multiplication(p, q))
 
-println(Polynomial(p)*Polynomial(q))
+println("p*q with built in polynomial", Polynomial(p)*Polynomial(q))
+
