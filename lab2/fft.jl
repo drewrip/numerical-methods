@@ -5,8 +5,10 @@
 
 using Printf
 using PrettyTables
-using FFTW
 using Polynomials
+using CSV
+using Plots
+using DataFrames
 
 # Implementation of the Fast Fourier Transform and its inverse
 # Note: this implementation is not well optimized and is directly
@@ -103,3 +105,31 @@ println("p*q with fast polynomial mult = ", fast_polynomial_multiplication(p, q)
 
 println("p*q with built in polynomial", Polynomial(p)*Polynomial(q))
 
+
+df = CSV.read("SampleSignal.csv", DataFrame)
+
+
+y_fft = fft(df.y)
+y_abs_fft = collect(map(x -> abs(x), y_fft))
+
+freq_domain = collect(zip(df.t, y_abs_fft))
+max_y = maximum(y_abs_fft)
+max_t = maximum(df.t)
+
+dominant_freqs = filter(x -> x[2] > max_y/2, freq_domain)
+dominant_freqs = map(x -> ((x[1]*max_t)/(2 * pi), x[2]), dominant_freqs)
+dmf = map(x->x[1], dominant_freqs)
+println(dominant_freqs)
+cos_wave = (x, t) -> sum(map(n -> cos(n*t), x))
+
+x = range(0, max_t, length=16384)
+y = map(i->cos_wave(dmf, i), x)
+
+plot(df.t, [df.y, y_abs_fft, y],
+    layout=(3,1),
+    size=(1000,1000),
+)
+
+xlabel!("x")
+ylabel!("y")
+png("signal.png")
