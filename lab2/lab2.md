@@ -1,3 +1,9 @@
+# Lab 2 (CSE 5361 Painter) - Drew Ripberger
+The solutions are written in Julia.
+
+## Code
+
+```julia
 # Numerical Methods Spring 2023
 # Professor Nick Painter
 #
@@ -134,3 +140,17 @@ plot(df.t, [df.y, y_abs_fft, y],
 xlabel!("t")
 ylabel!("y")
 png("signal.png")
+```
+
+## Output
+
+```
+fft(p) = ComplexF64[28.0 + 0.0im, 0.9999999999999999 - 1.0im, 10.0 + 0.0im, 1.0 + 1.0im]
+p*q with fast polynomial mult = ComplexF64[90.0 + 1.3766765505351941e-14im,
+    126.0 - 1.425677897017003e-14im, 137.0 + 7.549516567451064e-15im,
+    184.0 + 4.592425496802574e-17im, 83.0 - 1.4654943925052066e-14im,
+    55.0 + 1.4164930460233978e-14im, 25.0 - 6.661338147750939e-15im,
+    0.0 + 4.592425496802574e-17im]
+p*q with built in polynomial90 + 126*x + 137*x^2 + 184*x^3 + 83*x^4 + 55*x^5 + 25*x^6
+```
+![](signal.png)
