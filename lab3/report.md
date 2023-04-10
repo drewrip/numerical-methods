@@ -1,8 +1,10 @@
-# Numerical Methods Spring 2023
-# Professor Nick Painter
-#
-# Author: Drew Ripberger
+# Lab 3 (CSE 5361 Painter) - Drew Ripberger
 
+The solutions are written in Julia.
+
+## Code
+
+```julia
 using Printf
 using LinearAlgebra
 
@@ -12,7 +14,11 @@ function factorize_algo(A, L_diag, U_diag)
     L = zeros((n,n))
     U = zeros((n,n))
     for i in 1:n
-        diag_entry = (A[i, i] - sum(map(x -> x[1]*x[2], zip(L[i, begin:i-1], U[begin:i-1, i])), init=0))
+        diag_entry = (A[i, i] - sum(
+            map(x -> x[1]*x[2], zip(L[i, begin:i-1], U[begin:i-1, i])),
+                init=0
+            )
+        )
         if L_diag[i] == 0
             L[i, i] = diag_entry/U_diag[i]
             U[i, i] = U_diag[i]
@@ -22,8 +28,16 @@ function factorize_algo(A, L_diag, U_diag)
         end
 
         for j in i:n
-            L[j, i] = (1/U[i, i])*(A[j, i] - sum(map(x -> x[1]*x[2], zip(L[j, begin:i-1], U[begin:i-1, i])), init=0))
-            U[i, j] = (1/L[i, i])*(A[i, j] - sum(map(x -> x[1]*x[2], zip(L[i, begin:i-1], U[begin:i-1, j])), init=0))
+            L[j, i] = (1/U[i, i])*(A[j, i] - sum(
+                map(x -> x[1]*x[2], zip(L[j, begin:i-1], U[begin:i-1, i])),
+                    init=0
+                )
+            )
+            U[i, j] = (1/L[i, i])*(A[i, j] - sum(
+                map(x -> x[1]*x[2], zip(L[i, begin:i-1], U[begin:i-1, j])),
+                    init=0
+                )
+            )
         end
     end
     L, U   
@@ -157,3 +171,116 @@ x = mv_newtons(
         [1, 1],
     )
 display(x)
+```
+
+## Output
+
+```
+Doolittle factorization:
+L =
+4×4 Matrix{Float64}:
+ 1.0   0.0  0.0  0.0
+ 1.4   1.0  0.0  0.0
+ 1.2  -2.0  1.0  0.0
+ 1.0   0.0  1.5  1.0
+U =
+4×4 Matrix{Float64}:
+ 5.0  7.0   6.0   5.0
+ 0.0  0.2  -0.4  -8.88178e-16
+ 0.0  0.0   2.0   3.0
+ 0.0  0.0   0.0   0.5
+L*U =
+4×4 Matrix{Float64}:
+ 5.0   7.0   6.0   5.0
+ 7.0  10.0   8.0   7.0
+ 6.0   8.0  10.0   9.0
+ 5.0   7.0   9.0  10.0
+Crout factorization:
+L =
+4×4 Matrix{Float64}:
+ 5.0   0.0          0.0  0.0
+ 7.0   0.2          0.0  0.0
+ 6.0  -0.4          2.0  0.0
+ 5.0  -8.88178e-16  3.0  0.5
+U =
+4×4 Matrix{Float64}:
+ 1.0  1.4   1.2  1.0
+ 0.0  1.0  -2.0  0.0
+ 0.0  0.0   1.0  1.5
+ 0.0  0.0   0.0  1.0
+L*U =
+4×4 Matrix{Float64}:
+ 5.0   7.0   6.0   5.0
+ 7.0  10.0   8.0   7.0
+ 6.0   8.0  10.0   9.0
+ 5.0   7.0   9.0  10.0
+[1 ? 1 ?], [? 1 ? 1] factorization:
+L =
+4×4 Matrix{Float64}:
+ 1.0   0.0  0.0  0.0
+ 1.4   0.2  0.0  0.0
+ 1.2  -0.4  1.0  0.0
+ 1.0   0.0  1.5  0.5
+U =
+4×4 Matrix{Float64}:
+ 5.0  7.0   6.0   5.0
+ 0.0  1.0  -2.0  -4.44089e-15
+ 0.0  0.0   2.0   3.0
+ 0.0  0.0   0.0   1.0
+L*U =
+4×4 Matrix{Float64}:
+ 5.0   7.0   6.0   5.0
+ 7.0  10.0   8.0   7.0
+ 6.0   8.0  10.0   9.0
+ 5.0   7.0   9.0  10.0
+[? 1 ? 1], [1 ? 1 ?] factorization:
+L =
+4×4 Matrix{Float64}:
+ 5.0   0.0          0.0  0.0
+ 7.0   1.0          0.0  0.0
+ 6.0  -2.0          2.0  0.0
+ 5.0  -4.44089e-15  3.0  1.0
+U =
+4×4 Matrix{Float64}:
+ 1.0  1.4   1.2  1.0
+ 0.0  0.2  -0.4  0.0
+ 0.0  0.0   1.0  1.5
+ 0.0  0.0   0.0  0.5
+L*U =
+4×4 Matrix{Float64}:
+ 5.0   7.0   6.0   5.0
+ 7.0  10.0   8.0   7.0
+ 6.0   8.0  10.0   9.0
+ 5.0   7.0   9.0  10.0
+[? ? 7 9], [3 5 ? ?] factorization:
+L =
+4×4 Matrix{Float64}:
+ 1.66667   0.0    0.0  0.0
+ 2.33333   0.04   0.0  0.0
+ 2.0      -0.08   7.0  0.0
+ 1.66667   0.0   10.5  9.0
+U =
+4×4 Matrix{Float64}:
+ 3.0  4.2    3.6       3.0
+ 0.0  5.0  -10.0       0.0
+ 0.0  0.0    0.285714  0.428571
+ 0.0  0.0    0.0       0.0555556
+L*U =
+4×4 Matrix{Float64}:
+ 5.0   7.0   6.0   5.0
+ 7.0  10.0   8.0   7.0
+ 6.0   8.0  10.0   9.0
+ 5.0   7.0   9.0  10.0
+========================================
+dominant eigenvalue of M = 30.288685345802126
+corresponding dominant eigenvector =
+4-element Vector{Float64}:
+ 0.38026207439071347
+ 0.5285678495286417
+ 0.5519548496316626
+ 0.5209247807436572
+mv newtons method, x =
+2-element Vector{Float64}:
+ 2.0
+ 1.0
+```
